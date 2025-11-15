@@ -13,5 +13,9 @@ class Animation(Component):
     frame: int = 0
 
     def update(self, dt: float):
-        self.frame = (self.frame + 1) % self.animations[self.current_animation].frameCount
-        rl.update_model_animation(self.model, self.animations[self.current_animation], self.frame)
+        self.frame = (self.frame + 1) % self.animations[
+            self.current_animation
+        ].frameCount
+        rl.update_model_animation(
+            self.model, self.animations[self.current_animation], self.frame
+        )

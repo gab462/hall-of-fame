@@ -1,7 +1,7 @@
 import io
 import struct
 import typing
-from dataclasses import dataclass, fields, asdict
+from dataclasses import dataclass, asdict
 from components.tilt_controls import TiltControls
 
 
@@ -37,13 +37,24 @@ class Sync:
     is_walking_backward: bool
 
     @classmethod
-    def from_controls(cls, from_id: bytes, to_id: bytes, controls: TiltControls) -> typing.Self:
-        return cls(from_id, to_id,
-                   controls.position.x, controls.position.y, controls.position.z,
-                   controls.direction.x, controls.direction.y,
-                   controls.speed, controls.rotation_speed,
-                   controls.is_turning_right, controls.is_turning_left,
-                   controls.is_walking_forward, controls.is_walking_backward)
+    def from_controls(
+        cls, from_id: bytes, to_id: bytes, controls: TiltControls
+    ) -> typing.Self:
+        return cls(
+            from_id,
+            to_id,
+            controls.position.x,
+            controls.position.y,
+            controls.position.z,
+            controls.direction.x,
+            controls.direction.y,
+            controls.speed,
+            controls.rotation_speed,
+            controls.is_turning_right,
+            controls.is_turning_left,
+            controls.is_walking_forward,
+            controls.is_walking_backward,
+        )
 
     def to_controls(self, controls: TiltControls):
         controls.position.x = self.position_x
@@ -91,21 +102,31 @@ class WalkingBackward:
     state: bool
 
 
-Message = Hello | Welcome | GetState | Sync | Left | TurningRight | TurningLeft | WalkingForward | WalkingBackward
+Message = (
+    Hello
+    | Welcome
+    | GetState
+    | Sync
+    | Left
+    | TurningRight
+    | TurningLeft
+    | WalkingForward
+    | WalkingBackward
+)
 
 
 def get_fmt(cls: type) -> str:
     type_mappings: dict[type, str] = {
-        int: 'i',
-        float: 'f',
-        bool: '?',
-        bytes: '16s', # only uuid allowed
+        int: "i",
+        float: "f",
+        bool: "?",
+        bytes: "16s",  # only uuid allowed
     }
 
     fmt = io.StringIO()
 
-    fmt.write('!')
-    fmt.write(type_mappings[int]) # message_type
+    fmt.write("!")
+    fmt.write(type_mappings[int])  # message_type
 
     for t in typing.get_type_hints(cls).values():
         fmt.write(type_mappings[t])
@@ -120,7 +141,7 @@ def serialize(obj: Message) -> bytes:
 
 
 def deserialize(buf: bytes) -> Message:
-    message_type, = struct.unpack('!i', buf[:4])
+    (message_type,) = struct.unpack("!i", buf[:4])
 
     t = typing.get_args(Message)[message_type]
 
