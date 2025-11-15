@@ -188,7 +188,7 @@ def main():
     camera = CameraFollowed(controls.position, controls.direction)
     player.components.append(camera)
 
-    rl.disable_cursor()
+    # rl.disable_cursor()
 
     rl.set_target_fps(60)
 
