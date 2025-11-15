@@ -1,3 +1,4 @@
+import pathlib
 from queue import Queue
 from dataclasses import dataclass
 from concurrent.futures import ThreadPoolExecutor
@@ -13,6 +14,15 @@ from hall_of_fame.message import Message
 from hall_of_fame import message
 
 
+PLAYER_IDLE_ANIMATION = 2
+PLAYER_WALKING_ANIMATION = 10
+
+
+connection: client.ClientConnection
+connected = False
+net_id: bytes = b""
+
+
 @dataclass
 class PeerState:
     entity: Entity
@@ -21,26 +31,19 @@ class PeerState:
     animation: Animation
 
 
-connection: client.ClientConnection
-connected = False
-net_id: bytes = b""
-
-PLAYER_IDLE_ANIMATION = 2
-PLAYER_WALKING_ANIMATION = 10
-
-
 def instantiate_player() -> tuple[Entity, TiltControls, Model, Animation]:
     player = Entity()
 
     controls = TiltControls()
     player.components.append(controls)
 
-    player_model = rl.load_model("assets/robot.glb")
+    model_path = str(pathlib.Path(__file__).parent.parent.parent / "assets" / "robot.glb")
+    player_model = rl.load_model(model_path)
     model = Model(player_model, controls.position, controls.direction)
     player.components.append(model)
 
     animations_count = rl.ffi.new("int *", 1)
-    player_animations = rl.load_model_animations("assets/robot.glb", animations_count)
+    player_animations = rl.load_model_animations(model_path, animations_count)
     animation = Animation(model.model, player_animations, animations_count[0])
     player.components.append(animation)
 
