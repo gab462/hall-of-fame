@@ -1,13 +1,14 @@
 import asyncio
 import websockets.asyncio as ws
+import websockets.asyncio.server as server
 import config
 import message
 
 
-clients: dict[bytes, ws.server.ServerConnection] = {}
+clients: dict[bytes, server.ServerConnection] = {}
 
 
-async def handler(conn: ws.server.ServerConnection):
+async def handler(conn: server.ServerConnection):
     from_id = conn.id.bytes
 
     try:
@@ -61,9 +62,9 @@ async def handler(conn: ws.server.ServerConnection):
 
 
 async def main():
-    async with ws.server.serve(handler, config.ip, config.port) as server:
+    async with server.serve(handler, config.ip, config.port) as host:
         print(f"Listening on {config.ip}:{config.port}")
-        await server.serve_forever()
+        await host.serve_forever()
 
 
 if __name__ == "__main__":

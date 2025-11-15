@@ -2,7 +2,7 @@ from queue import Queue
 from dataclasses import dataclass
 from concurrent.futures import ThreadPoolExecutor
 import pyray as rl
-import websockets.sync as ws
+import websockets.sync.client as client
 import config
 from entity import Entity
 from components.tilt_controls import TiltControls
@@ -21,7 +21,7 @@ class PeerState:
     animation: Animation
 
 
-connection: ws.client.ClientConnection
+connection: client.ClientConnection
 connected = False
 net_id: bytes = b""
 
@@ -80,7 +80,7 @@ def process_input(player_control: TiltControls, player_animation: Animation):
 
 
 def enqueue_messages(message_queue: Queue[Message]):
-    with ws.client.connect(f"ws://{config.ip}:{config.port}") as conn:
+    with client.connect(f"ws://{config.ip}:{config.port}") as conn:
         try:
             conn.send(message.serialize(message.Hello()))
 
