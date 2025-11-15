@@ -37,7 +37,7 @@ def instantiate_player() -> tuple[Entity, TiltControls, Model, Animation]:
     controls = TiltControls()
     player.components.append(controls)
 
-    model_path = str(pathlib.Path(__file__).parent.parent.parent / "assets" / "robot.glb")
+    model_path = str(pathlib.Path(__file__).parent / "assets" / "robot.glb")
     player_model = rl.load_model(model_path)
     model = Model(player_model, controls.position, controls.direction)
     player.components.append(model)
