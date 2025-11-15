@@ -1,8 +1,8 @@
 import asyncio
 import websockets.asyncio as ws
 import websockets.asyncio.server as server
-import config
-import message
+from hall_of_fame import config
+from hall_of_fame import message
 
 
 clients: dict[bytes, server.ServerConnection] = {}
@@ -61,11 +61,11 @@ async def handler(conn: server.ServerConnection):
             return
 
 
-async def main():
+async def run_server():
     async with server.serve(handler, config.ip, config.port) as host:
         print(f"Listening on {config.ip}:{config.port}")
         await host.serve_forever()
 
 
-if __name__ == "__main__":
-    asyncio.run(main())
+def main():
+    asyncio.run(run_server())

@@ -3,14 +3,14 @@ from dataclasses import dataclass
 from concurrent.futures import ThreadPoolExecutor
 import pyray as rl
 import websockets.sync.client as client
-import config
-from entity import Entity
-from components.tilt_controls import TiltControls
-from components.camera_followed import CameraFollowed
-from components.model import Model
-from components.animation import Animation
-from message import Message
-import message
+from hall_of_fame import config
+from hall_of_fame.entity import Entity
+from hall_of_fame.components.tilt_controls import TiltControls
+from hall_of_fame.components.camera_followed import CameraFollowed
+from hall_of_fame.components.model import Model
+from hall_of_fame.components.animation import Animation
+from hall_of_fame.message import Message
+from hall_of_fame import message
 
 
 @dataclass
@@ -231,7 +231,3 @@ def main():
     rl.unload_model(model.model)
 
     rl.close_window()
-
-
-if __name__ == "__main__":
-    main()

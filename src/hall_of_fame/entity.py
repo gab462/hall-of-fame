@@ -1,5 +1,5 @@
 from dataclasses import dataclass, field
-from component import Component
+from hall_of_fame.component import Component
 
 
 @dataclass

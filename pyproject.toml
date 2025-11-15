@@ -1,0 +1,28 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "hall_of_fame"
+requires-python = ">=3.13.0"
+version = "0.0.1"
+license = "MIT"
+license-files = ["LICENSE"]
+dependencies = [
+    "raylib == 5.5.0.3",
+    "websockets == 15.0.1"
+]
+
+[project.urls]
+Homepage = "https://github.com/gab462/hall-of-fame"
+Issues = "https://github.com/gab462/hall-of-fame/issues"
+
+[project.gui-scripts]
+hof-server = "hall_of_fame.server:main"
+hof-client = "hall_of_fame.client:main"
+
+[project.optional-dependencies]
+dev = [
+    "ruff == 0.14.5",
+    "zuban == 0.2.2"
+]

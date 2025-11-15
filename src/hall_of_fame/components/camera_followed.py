@@ -1,6 +1,6 @@
 from dataclasses import dataclass, field
 import pyray as rl
-from component import Component
+from hall_of_fame.component import Component
 
 
 @dataclass

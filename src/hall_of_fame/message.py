@@ -2,7 +2,7 @@ import io
 import struct
 import typing
 from dataclasses import dataclass, asdict
-from components.tilt_controls import TiltControls
+from hall_of_fame.components.tilt_controls import TiltControls
 
 
 @dataclass
