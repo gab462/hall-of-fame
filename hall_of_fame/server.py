@@ -62,10 +62,14 @@ async def handler(conn: server.ServerConnection):
 
 
 async def run_server():
-    async with server.serve(handler, config.ip, config.port) as host:
-        print(f"Listening on {config.ip}:{config.port}")
+    async with server.serve(handler, config.IP, config.PORT) as host:
+        print(f"Listening on {config.IP}:{config.PORT}")
         await host.serve_forever()
 
 
 def main():
     asyncio.run(run_server())
+
+
+if __name__ == '__main__':
+    main()

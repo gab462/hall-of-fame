@@ -24,8 +24,19 @@ hof-client = "hall_of_fame.client:main"
 [project.optional-dependencies]
 dev = [
     "ruff == 0.14.5",
-    "zuban == 0.2.2"
+    "zuban == 0.2.2",
+    "cx_Freeze == 8.4.1"
 ]
 
 [tool.hatch.build.targets.wheel]
 packages = ["hall_of_fame"]
+
+[tool.cxfreeze]
+executables = [
+    { script = "hall_of_fame/client.py", base = "gui" },
+    { script = "hall_of_fame/server.py", base = "console" }
+]
+
+[tool.cxfreeze.build_exe]
+excludes = ["ruff", "zuban"]
+include_files = ["hall_of_fame/assets"]

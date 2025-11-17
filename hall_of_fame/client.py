@@ -1,4 +1,3 @@
-import pathlib
 from queue import Queue
 from dataclasses import dataclass
 from concurrent.futures import ThreadPoolExecutor
@@ -12,10 +11,6 @@ from hall_of_fame.components.model import Model
 from hall_of_fame.components.animation import Animation
 from hall_of_fame.message import Message
 from hall_of_fame import message
-
-
-PLAYER_IDLE_ANIMATION = 2
-PLAYER_WALKING_ANIMATION = 10
 
 
 connection: client.ClientConnection
@@ -37,7 +32,7 @@ def instantiate_player() -> tuple[Entity, TiltControls, Model, Animation]:
     controls = TiltControls()
     player.components.append(controls)
 
-    model_path = str(pathlib.Path(__file__).parent / "assets" / "robot.glb")
+    model_path = config.MODEL_PATH
     player_model = rl.load_model(model_path)
     model = Model(player_model, controls.position, controls.direction)
     player.components.append(model)
@@ -67,11 +62,11 @@ def process_input(player_control: TiltControls, player_animation: Animation):
 
     if rl.is_key_pressed(rl.KeyboardKey.KEY_W):
         player_control.is_walking_forward = True
-        player_animation.current_animation = PLAYER_WALKING_ANIMATION
+        player_animation.current_animation = config.PLAYER_WALKING_ANIMATION
         connection.send(message.serialize(message.WalkingForward(net_id, True)))
     elif rl.is_key_released(rl.KeyboardKey.KEY_W):
         player_control.is_walking_forward = False
-        player_animation.current_animation = PLAYER_IDLE_ANIMATION
+        player_animation.current_animation = config.PLAYER_IDLE_ANIMATION
         connection.send(message.serialize(message.WalkingForward(net_id, False)))
 
     if rl.is_key_pressed(rl.KeyboardKey.KEY_S):
@@ -83,7 +78,7 @@ def process_input(player_control: TiltControls, player_animation: Animation):
 
 
 def enqueue_messages(message_queue: Queue[Message]):
-    with client.connect(f"ws://{config.ip}:{config.port}") as conn:
+    with client.connect(f"ws://{config.IP}:{config.PORT}") as conn:
         try:
             conn.send(message.serialize(message.Hello()))
 
@@ -163,11 +158,11 @@ def process_messages(
                     if state:
                         peers[
                             from_id
-                        ].animation.current_animation = PLAYER_WALKING_ANIMATION
+                        ].animation.current_animation = config.PLAYER_WALKING_ANIMATION
                     else:
                         peers[
                             from_id
-                        ].animation.current_animation = PLAYER_IDLE_ANIMATION
+                        ].animation.current_animation = config.PLAYER_IDLE_ANIMATION
 
                 case message.WalkingBackward(from_id, state):
                     peers[from_id].controls.is_walking_backward = state
@@ -234,3 +229,7 @@ def main():
     rl.unload_model(model.model)
 
     rl.close_window()
+
+
+if __name__ == '__main__':
+    main()
